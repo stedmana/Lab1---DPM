@@ -6,6 +6,7 @@ import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.Port;
 import lejos.robotics.SampleProvider;
 import lejos.hardware.Button;
+import lejos.hardware.motor.*;
 
 public class WallFollowingLab {
 
@@ -22,6 +23,8 @@ public class WallFollowingLab {
       new EV3LargeRegulatedMotor(LocalEV3.get().getPort("B"));
   public static final EV3LargeRegulatedMotor rightMotor =
       new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
+  public static final EV3MediumRegulatedMotor sensorRotation = 
+		  new EV3MediumRegulatedMotor(LocalEV3.get().getPort("D"));
   
 
   // Main entry point - instantiate objects used and set up sensor
