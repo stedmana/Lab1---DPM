@@ -2,30 +2,56 @@ package ca.mcgill.ecse211.wallfollowing;
 
 import lejos.hardware.sensor.*;
 import lejos.hardware.ev3.LocalEV3;
+import lejos.hardware.lcd.TextLCD;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
+import lejos.hardware.motor.Motor;
 import lejos.hardware.port.Port;
+import lejos.robotics.RegulatedMotor;
 import lejos.robotics.SampleProvider;
 import lejos.hardware.Button;
+import lejos.hardware.motor.*;
 
 public class WallFollowingLab {
 
   // Parameters: adjust these for desired performance
 
-  private static final int bandCenter = 20; // Offset from the wall (cm)
-  private static final int bandWidth = 3; // Width of dead band (cm)
+  private static final int bandCenter = 30; // Offset from the wall (cm)
+  private static final int bandWidth = 2; // Width of dead band (cm)
   private static final int motorLow = 100; // Speed of slower rotating wheel (deg/sec)
   private static final int motorHigh = 200; // Speed of the faster rotating wheel (deg/seec)
+  
+  public static int wallDist = 0;
+  public static int distError = 0;
 
 
-  private static final Port usPort = LocalEV3.get().getPort("S1");
-  public static final EV3LargeRegulatedMotor leftMotor =
-      new EV3LargeRegulatedMotor(LocalEV3.get().getPort("B"));
-  public static final EV3LargeRegulatedMotor rightMotor =
-      new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
   
 
   // Main entry point - instantiate objects used and set up sensor
+  
+  static TextLCD t = LocalEV3.get().getTextLCD();
 
+  
+  static final Port leftMotorPort = LocalEV3.get().getPort("B");
+  static final Port rightMotorPort = LocalEV3.get().getPort("A");
+  
+  static final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(leftMotorPort);
+  static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(rightMotorPort);
+  
+  //create a port for the US and Touch sensor
+  static Port usPort = LocalEV3.get().getPort("S1"); //maybe change to S1
+  //static Port portTouch = LocalEV3.get().getPort("S2"); //randomly put in S2...
+  
+  //instantiate US and Touch sensor
+  //static SensorModes myTouch = new EV3TouchSensor(portTouch);
+  static SensorModes myUS = new EV3UltrasonicSensor(usPort); //stopped here yo
+ 
+
+  /*public static final EV3LargeRegulatedMotor leftMotor =
+	      new EV3LargeRegulatedMotor(LocalEV3.get().getPort("B")); //maybe change to A
+	  public static final EV3LargeRegulatedMotor rightMotor =
+	      new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A")); //maybe change to D
+	  public static final EV3LargeRegulatedMotor sensorRotator = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));*/
+  
   public static void main(String[] args) {
 
     int option = 0;
