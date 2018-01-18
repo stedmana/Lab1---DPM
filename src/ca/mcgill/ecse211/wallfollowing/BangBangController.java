@@ -9,6 +9,7 @@ public class BangBangController implements UltrasonicController {
   private final int motorLow;
   private final int motorHigh;
   private int distance;
+  //test comment
 
   public BangBangController(int bandCenter, int bandwidth, int motorLow, int motorHigh) {
     // Default Constructor
