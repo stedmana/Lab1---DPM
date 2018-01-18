@@ -1,4 +1,4 @@
 # Lab1---DPM
 ------------------
-##Authors
+## Authors
 Alex Stedman & John Omotayo
