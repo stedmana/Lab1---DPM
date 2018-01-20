@@ -11,30 +11,18 @@ import lejos.hardware.port.Port;
 import lejos.robotics.SampleProvider;
 import lejos.utility.TimerListener;
 import lejos.hardware.Button;
-import lejos.hardware.motor.*;
 
 public class WallFollowingLab implements TimerListener {
 
   // Parameters: adjust these for desired performance
 	
   public static final int SINTERVAL = 100; //sampling rate - 10Hz
-  public static final double PROPCONST = 1.0; //proportionality constant
-  public static final int WALLDIST = 30; //distance to wall * 1.4(cm) including sensor angle - NOT SURE
-  public static final int FWDSPEED = 100; // forward speed
-  public static final int MAXCORRECTION = 50; //prevent stalling
   public static final long SLEEPINT = 500; //display update
-  public static final int ERRORTOL = 1; //error tolerance
-  public static final int MAXDIST = 200; //max value of distance
-
+  
   private static final int bandCenter = 20; // Offset from the wall (cm)
   private static final int bandWidth = 3; // Width of dead band (cm)
   private static final int motorLow = 100; // Speed of slower rotating wheel (deg/sec)
   private static final int motorHigh = 200; // Speed of the faster rotating wheel (deg/seec)
-
-  public static int wallDist = 0;
-  public static int distError = 0;
-  public static int leftSpeed = FWDSPEED;
-  public static int rightSpeed = FWDSPEED;
 
   private static final Port usPort = LocalEV3.get().getPort("S1");
   public static final EV3LargeRegulatedMotor leftMotor =
