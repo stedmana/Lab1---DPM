@@ -1,13 +1,14 @@
 package ca.mcgill.ecse211.wallfollowing;
 
-import lejos.hardware.motor.EV3LargeRegulatedMotor;
+//import lejos.hardware.motor.EV3LargeRegulatedMotor;
 
 public class PController implements UltrasonicController {
 
   /* Constants */
   private static final int MOTOR_SPEED = 200;
   private static final int FILTER_OUT = 20;
-  private static final int outerWheel = 200;
+  private static int outerWheel = 200;
+  private static final int constant = 20;
 
   private final int bandCenter;
   private final int bandWidth;
@@ -49,12 +50,20 @@ public class PController implements UltrasonicController {
     }
     // TODO: process a movement based on the us distance passed in (P style)
     if(distance <= bandCenter+bandWidth && distance >= bandCenter-bandWidth) { //no correction needed, robot should move straight
-    	WallFollowingLab.leftMotor.setSpeed(MOTOR_SPEED);
+    	//WallFollowingLab.leftMotor.setSpeed(MOTOR_SPEED);
     	WallFollowingLab.rightMotor.setSpeed(MOTOR_SPEED);
-    	WallFollowingLab.leftMotor.forward();
+    	//WallFollowingLab.leftMotor.forward();
     	WallFollowingLab.rightMotor.forward();
     } else if(distance < bandCenter-bandWidth) { //robot is too close to the wall
-    	
+    	int diff = Math.abs(distance - (bandCenter-bandWidth));
+    	outerWheel = MOTOR_SPEED - (constant*diff);
+    	WallFollowingLab.rightMotor.setSpeed(outerWheel);
+    	WallFollowingLab.rightMotor.forward();
+    } else if(distance > bandCenter+bandWidth) { //robot is too far from the wall
+    	int diff = Math.abs(distance - bandCenter+bandWidth);
+    	outerWheel = MOTOR_SPEED + (constant*diff);
+    	WallFollowingLab.rightMotor.setSpeed(outerWheel);
+    	WallFollowingLab.rightMotor.forward();
     }
   }
 
