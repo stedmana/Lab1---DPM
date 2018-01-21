@@ -1,6 +1,7 @@
 package ca.mcgill.ecse211.wallfollowing;
 
 //import lejos.hardware.motor.*;
+// The LEFT wheel is the OUTER wheel
 
 public class BangBangController implements UltrasonicController {
 

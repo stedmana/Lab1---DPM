@@ -1,9 +1,5 @@
 package ca.mcgill.ecse211.wallfollowing;
 
-/*Each execution of the program results in ONLY the right actuator firing (backwards 
- * - maybe the motors were connected backwards?), which causes the robot to turn in 
- * a clockwise direction, regardless of how close/far away the ultrasonic sensor is to the walls.*/
-
 import lejos.hardware.sensor.*;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
@@ -13,13 +9,11 @@ import lejos.utility.TimerListener;
 import lejos.hardware.Button;
 
 public class WallFollowingLab implements TimerListener {
-
-  // Parameters: adjust these for desired performance
 	
   public static final int SINTERVAL = 100; //sampling rate - 10Hz
   public static final long SLEEPINT = 500; //display update
   
-  private static final int bandCenter = 40; // Offset from the wall (cm)
+  private static final int bandCenter = 20; // Offset from the wall (cm)
   private static final int bandWidth = 3; // Width of dead band (cm)
   private static final int motorLow = 100; // Speed of slower rotating wheel (deg/sec)
   private static final int motorHigh = 200; // Speed of the faster rotating wheel (deg/seec)
