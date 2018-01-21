@@ -8,7 +8,7 @@ public class PController implements UltrasonicController {
   private static final int MOTOR_SPEED = 200;
   private static final int FILTER_OUT = 20;
   private static int outerWheel = 200;
-  private static final int constant = 20;
+  private static final int constant = 7;
 
   private final int bandCenter;
   private final int bandWidth;
