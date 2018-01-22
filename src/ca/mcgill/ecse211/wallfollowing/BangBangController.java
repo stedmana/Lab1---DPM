@@ -11,6 +11,7 @@ public class BangBangController implements UltrasonicController {
   private final int motorHigh;
   public static final double PROPCONST = 1.0;
   
+  
   private int distance;
   
   public static final int minDistance = 13;

@@ -8,12 +8,12 @@ package ca.mcgill.ecse211.wallfollowing;
 public class PController implements UltrasonicController {
 
   /* Constants */
-  //private static final int MINDISTANCE = 10;
   private static final int MOTOR_SPEED = 200;
-  private static final int FILTER_OUT = 40;
+  private static final int FILTER_OUT = 20;
   private static int outerWheel = 200;
   private static int innerWheel = 200;
   private static final int constant = 20;
+  private static final int minDistance = 13;
 
   private final int bandCenter;
   private final int bandWidth;
@@ -59,10 +59,11 @@ public class PController implements UltrasonicController {
     	WallFollowingLab.rightMotor.setSpeed(MOTOR_SPEED);
     	WallFollowingLab.leftMotor.forward();
     	WallFollowingLab.rightMotor.forward();
-    } else if(this.distance < (bandCenter-bandWidth) && this.distance < 10) { //robot is WAY too close to the wall - reverse/rotate until the distance is acceptable
+    } else if(this.distance < (bandCenter-bandWidth) && this.distance < minDistance) { //robot is WAY too close to the wall - reverse/rotate until the distance is acceptable
     	int diff = Math.abs(distance - (bandCenter-bandWidth));
     	outerWheel = MOTOR_SPEED + (constant*diff);
-    	WallFollowingLab.rightMotor.setSpeed(MOTOR_SPEED);
+    	innerWheel = MOTOR_SPEED - (constant*diff); //changed this...
+    	WallFollowingLab.rightMotor.setSpeed(innerWheel);
     	WallFollowingLab.leftMotor.setSpeed(outerWheel);
     	WallFollowingLab.rightMotor.backward();
     	WallFollowingLab.leftMotor.backward();
@@ -84,7 +85,7 @@ public class PController implements UltrasonicController {
     	WallFollowingLab.rightMotor.forward();*/
     	int diff = Math.abs(this.distance - (bandCenter+bandWidth));
     	outerWheel = MOTOR_SPEED + 2*(constant*diff);
-    	innerWheel = MOTOR_SPEED;
+    	innerWheel = MOTOR_SPEED - (constant*diff); //changed this...
     	WallFollowingLab.leftMotor.setSpeed(outerWheel);
     	WallFollowingLab.rightMotor.setSpeed(innerWheel);
     	WallFollowingLab.leftMotor.forward();
