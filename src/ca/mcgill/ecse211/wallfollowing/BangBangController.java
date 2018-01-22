@@ -13,6 +13,7 @@ public class BangBangController implements UltrasonicController {
   
   private int distance;
   
+  public static final int minDistance = 13;
   public static final int MAXCORRECTION = 50;
   public static final int FWDSPEED = 200;
   //public static final int WALLDIST = 20;
@@ -46,41 +47,22 @@ public class BangBangController implements UltrasonicController {
     	WallFollowingLab.rightMotor.setSpeed(motorHigh);
     	WallFollowingLab.leftMotor.forward();
     	WallFollowingLab.rightMotor.forward();
-    }
-    /*if(Math.abs(distError) <= ERRORTOL) { //the error is within the bounds, no correction is required
-    	leftSpeed = FWDSPEED;
-    	rightSpeed = FWDSPEED;
-    	WallFollowingLab.leftMotor.setSpeed(leftSpeed);
-    	WallFollowingLab.rightMotor.setSpeed(rightSpeed);
-    	WallFollowingLab.leftMotor.forward();
-    	WallFollowingLab.rightMotor.forward();
-    }*/ else if(distance < bandCenter-bandwidth) { //the vehicle is too close to the wall: move away!
+    } else if(distance < bandCenter-bandwidth && distance < minDistance) {
+    	WallFollowingLab.leftMotor.setSpeed(2*motorHigh);
+    	WallFollowingLab.rightMotor.setSpeed(motorLow);
+    	WallFollowingLab.rightMotor.backward();
+    	WallFollowingLab.leftMotor.backward();
+    } else if(distance < bandCenter-bandwidth) { //the vehicle is too close to the wall: move away!
     	WallFollowingLab.leftMotor.setSpeed(motorLow);
     	WallFollowingLab.rightMotor.setSpeed(motorHigh);
     	WallFollowingLab.leftMotor.forward();
     	WallFollowingLab.rightMotor.forward();
-    } /*else if (distError > 0) { //the vehicle is too close to the wall: move away!
-    	diff = calcProp(distError);
-    	leftSpeed = FWDSPEED + diff;
-    	rightSpeed = FWDSPEED - diff;
-    	WallFollowingLab.leftMotor.setSpeed(leftSpeed);
-    	WallFollowingLab.rightMotor.setSpeed(rightSpeed);
-    	WallFollowingLab.leftMotor.forward();
-    	WallFollowingLab.rightMotor.forward();
-    }*/ else { //the vehicle is too far from the wall: move closer!
+    } else { //the vehicle is too far from the wall: move closer!
     	WallFollowingLab.leftMotor.setSpeed(motorHigh);
     	WallFollowingLab.rightMotor.setSpeed(motorLow);
     	WallFollowingLab.leftMotor.forward();
     	WallFollowingLab.rightMotor.forward();
-    } /*else { //the vehicle is too far from the wall: move closer!
-    	diff = calcProp(distError);
-    	leftSpeed = FWDSPEED - diff;
-    	rightSpeed = FWDSPEED + diff;
-    	WallFollowingLab.leftMotor.setSpeed(leftSpeed);
-    	WallFollowingLab.rightMotor.setSpeed(rightSpeed);
-    	WallFollowingLab.leftMotor.forward();
-    	WallFollowingLab.rightMotor.forward();
-    }*/
+    } 
     
   }
 
