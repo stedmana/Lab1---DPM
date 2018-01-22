@@ -9,11 +9,13 @@ public class PController implements UltrasonicController {
 
   /* Constants */
   private static final int MOTOR_SPEED = 200;
-  private static final int FILTER_OUT = 20;
+  private static final int FILTER_OUT = 13;
   private static int outerWheel = 200;
   private static int innerWheel = 200;
-  private static final int constant = 20;
+  private static final int constant = 2;
   private static final int minDistance = 13;
+  private static final int SPEED_FAST = 150;
+  private static final int SPEED_SLOW = 75;
 
   private final int bandCenter;
   private final int bandWidth;
@@ -21,7 +23,7 @@ public class PController implements UltrasonicController {
   private int filterControl;
 
   public PController(int bandCenter, int bandwidth) {
-    this.bandCenter = bandCenter;
+    this.bandCenter = bandCenter - 8; //changed band center from 30 to 22, increase was for bangbang controller
     this.bandWidth = bandwidth;
     this.filterControl = 0;
 
@@ -39,11 +41,11 @@ public class PController implements UltrasonicController {
     // (n.b. this was not included in the Bang-bang controller, but easily
     // could have).
     //
-    if (distance >= 80 && filterControl < FILTER_OUT) {
+    if (distance >= 50 && filterControl < FILTER_OUT) {
       // bad value, do not set the distance var, however do increment the
       // filter value
       filterControl++;
-    } else if (distance >= 80) {
+    } else if (distance >= 50) {
       // We have repeated large values, so there must actually be nothing
       // there: leave the distance alone
       this.distance = distance;
@@ -63,33 +65,29 @@ public class PController implements UltrasonicController {
     	int diff = Math.abs(distance - (bandCenter-bandWidth));
     	outerWheel = MOTOR_SPEED + (constant*diff);
     	innerWheel = MOTOR_SPEED - (constant*diff); //changed this...
-    	WallFollowingLab.rightMotor.setSpeed(innerWheel);
+    	WallFollowingLab.rightMotor.setSpeed(innerWheel/2);
     	WallFollowingLab.leftMotor.setSpeed(outerWheel);
     	WallFollowingLab.rightMotor.backward();
     	WallFollowingLab.leftMotor.backward();
+    	System.out.println("Way Close");
     } else if(this.distance < (bandCenter-bandWidth)) {//robot is still too close to the wall
     	int diff = Math.abs(this.distance - (bandCenter-bandWidth));
     	outerWheel = MOTOR_SPEED /*- (constant*diff)*/; 
-    	innerWheel = MOTOR_SPEED + 2*(constant*diff);
+    	innerWheel = MOTOR_SPEED + (constant*diff);
     	WallFollowingLab.leftMotor.setSpeed(outerWheel);
     	WallFollowingLab.rightMotor.setSpeed(innerWheel);
     	WallFollowingLab.leftMotor.forward();
     	WallFollowingLab.rightMotor.forward();
+    	System.out.println("Close");
     } else /*if(distance > (bandCenter+bandWidth))*/ { //robot is too far from the wall
-    	/*int diff = Math.abs(distance - (bandCenter+bandWidth));
-    	outerWheel = MOTOR_SPEED + (constant*diff);
-    	innerWheel = MOTOR_SPEED - (constant*diff); 
-    	WallFollowingLab.leftMotor.setSpeed(outerWheel);
-    	WallFollowingLab.rightMotor.setSpeed(innerWheel);
-    	WallFollowingLab.leftMotor.forward();
-    	WallFollowingLab.rightMotor.forward();*/
     	int diff = Math.abs(this.distance - (bandCenter+bandWidth));
-    	outerWheel = MOTOR_SPEED + 2*(constant*diff);
+    	outerWheel = MOTOR_SPEED + (constant*diff);
     	innerWheel = MOTOR_SPEED - (constant*diff); //changed this...
     	WallFollowingLab.leftMotor.setSpeed(outerWheel);
     	WallFollowingLab.rightMotor.setSpeed(innerWheel);
     	WallFollowingLab.leftMotor.forward();
     	WallFollowingLab.rightMotor.forward();
+    System.out.println("Too Far");
     }
   }
 
