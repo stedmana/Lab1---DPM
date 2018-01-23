@@ -9,13 +9,11 @@ public class PController implements UltrasonicController {
 
   /* Constants */
   private static final int MOTOR_SPEED = 200;
-  private static final int FILTER_OUT = 13;
-  private static int outerWheel = 200;
-  private static int innerWheel = 200;
-  private static final int constant = 2;
-  private static final int minDistance = 13;
-  private static final int SPEED_FAST = 150;
-  private static final int SPEED_SLOW = 75;
+  private static final int FILTER_OUT = 22;
+  private static int outerWheel;
+  private static int innerWheel;
+  private static final int constant = 3;
+  private static final int minDistance = 16;
 
   private final int bandCenter;
   private final int bandWidth;
@@ -23,7 +21,7 @@ public class PController implements UltrasonicController {
   private int filterControl;
 
   public PController(int bandCenter, int bandwidth) {
-    this.bandCenter = bandCenter - 8; //changed band center from 30 to 22, increase was for bangbang controller
+    this.bandCenter = bandCenter - 4; //changed band center from 30 to 22, increase was for bangbang controller
     this.bandWidth = bandwidth;
     this.filterControl = 0;
 
@@ -50,7 +48,7 @@ public class PController implements UltrasonicController {
       // there: leave the distance alone
       this.distance = distance;
     } else {
-      // distance went below 80: reset filter and leave
+      // distance went below 40: reset filter and leave
       // distance alone.
       filterControl = 0;
       this.distance = distance;
@@ -62,32 +60,36 @@ public class PController implements UltrasonicController {
     	WallFollowingLab.leftMotor.forward();
     	WallFollowingLab.rightMotor.forward();
     } else if(this.distance < (bandCenter-bandWidth) && this.distance < minDistance) { //robot is WAY too close to the wall - reverse/rotate until the distance is acceptable
-    	int diff = Math.abs(distance - (bandCenter-bandWidth));
+    	/*int diff = Math.abs(distance - (bandCenter-bandWidth));
     	outerWheel = MOTOR_SPEED + (constant*diff);
     	innerWheel = MOTOR_SPEED - (constant*diff); //changed this...
     	WallFollowingLab.rightMotor.setSpeed(innerWheel/2);
+    	WallFollowingLab.leftMotor.setSpeed(outerWheel);*/
+    	int diff = Math.abs(distance - (bandCenter - bandWidth));
+    	innerWheel = (2*(MOTOR_SPEED + (constant*diff)) + (constant*diff));
+    	outerWheel = MOTOR_SPEED;
+    	WallFollowingLab.rightMotor.setSpeed(innerWheel);
     	WallFollowingLab.leftMotor.setSpeed(outerWheel);
-    	WallFollowingLab.rightMotor.backward();
-    	WallFollowingLab.leftMotor.backward();
-    	System.out.println("Way Close");
+    	WallFollowingLab.rightMotor.forward();
+    	WallFollowingLab.leftMotor.forward();
     } else if(this.distance < (bandCenter-bandWidth)) {//robot is still too close to the wall
     	int diff = Math.abs(this.distance - (bandCenter-bandWidth));
-    	outerWheel = MOTOR_SPEED /*- (constant*diff)*/; 
-    	innerWheel = MOTOR_SPEED + (constant*diff);
+    	/*outerWheel = MOTOR_SPEED /*- (constant*diff); 
+    	innerWheel = MOTOR_SPEED + (constant*diff);*/
+    	outerWheel = MOTOR_SPEED + 2*(constant*diff); //MOTOR_SPEED - 2*(constant*diff);
+    	innerWheel = MOTOR_SPEED - (constant*diff);
     	WallFollowingLab.leftMotor.setSpeed(outerWheel);
     	WallFollowingLab.rightMotor.setSpeed(innerWheel);
     	WallFollowingLab.leftMotor.forward();
     	WallFollowingLab.rightMotor.forward();
-    	System.out.println("Close");
-    } else /*if(distance > (bandCenter+bandWidth))*/ { //robot is too far from the wall
+    } else  { //robot is too far from the wall
     	int diff = Math.abs(this.distance - (bandCenter+bandWidth));
-    	outerWheel = MOTOR_SPEED + (constant*diff);
-    	innerWheel = MOTOR_SPEED - (constant*diff); //changed this...
+    	outerWheel = MOTOR_SPEED + 2*(constant*diff);
+    	innerWheel = MOTOR_SPEED; //changed this...
     	WallFollowingLab.leftMotor.setSpeed(outerWheel);
     	WallFollowingLab.rightMotor.setSpeed(innerWheel);
     	WallFollowingLab.leftMotor.forward();
     	WallFollowingLab.rightMotor.forward();
-    System.out.println("Too Far");
     }
   }
 
