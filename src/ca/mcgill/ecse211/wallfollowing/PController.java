@@ -76,8 +76,8 @@ public class PController implements UltrasonicController {
     	int diff = Math.abs(this.distance - (bandCenter-bandWidth));
     	/*outerWheel = MOTOR_SPEED /*- (constant*diff); 
     	innerWheel = MOTOR_SPEED + (constant*diff);*/
-    	outerWheel = MOTOR_SPEED + 2*(constant*diff); //MOTOR_SPEED - 2*(constant*diff);
-    	innerWheel = MOTOR_SPEED - (constant*diff);
+    	outerWheel = MOTOR_SPEED + 2*(constant*diff); // this causes reversal:: MOTOR_SPEED - 2*(constant*diff);
+    	innerWheel = MOTOR_SPEED /*this can work with pivoting - needs to be tweaked: - 2*(constant*diff)*/;
     	WallFollowingLab.leftMotor.setSpeed(outerWheel);
     	WallFollowingLab.rightMotor.setSpeed(innerWheel);
     	WallFollowingLab.leftMotor.forward();
