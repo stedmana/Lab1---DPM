@@ -34,6 +34,7 @@ public class PController implements UltrasonicController {
 
   @Override
   public void processUSData(int distance) {
+	
 
     // rudimentary filter - toss out invalid samples corresponding to null
     // signal.
@@ -61,18 +62,20 @@ public class PController implements UltrasonicController {
     	WallFollowingLab.leftMotor.forward();
     	WallFollowingLab.rightMotor.forward();
     } else if(this.distance < (bandCenter-bandWidth) && this.distance < minDistance) { //robot is WAY too close to the wall - reverse/rotate until the distance is acceptable
-    	/*int diff = Math.abs(distance - (bandCenter-bandWidth));
+    	int diff = Math.abs(distance - (bandCenter-bandWidth));
     	outerWheel = MOTOR_SPEED + (constant*diff);
     	innerWheel = MOTOR_SPEED - (constant*diff); //changed this...
     	WallFollowingLab.rightMotor.setSpeed(innerWheel/2);
-    	WallFollowingLab.leftMotor.setSpeed(outerWheel);*/
-    	int diff = Math.abs(distance - (bandCenter - bandWidth));
+    	WallFollowingLab.leftMotor.setSpeed(outerWheel);
+    	WallFollowingLab.rightMotor.backward();
+    	WallFollowingLab.leftMotor.backward();
+    /*	int diff = Math.abs(distance - (bandCenter - bandWidth));
     	innerWheel = MOTOR_SPEED + 2*(constant*diff);//(2*(MOTOR_SPEED + (constant*diff)) + (constant*diff));
     	outerWheel = MOTOR_SPEED;
     	WallFollowingLab.rightMotor.setSpeed(innerWheel);
     	WallFollowingLab.leftMotor.setSpeed(0);
     	WallFollowingLab.rightMotor.forward();
-    	WallFollowingLab.leftMotor.forward();
+    	WallFollowingLab.leftMotor.forward();*/
     } else if(this.distance < (bandCenter-bandWidth)) {//robot is still too close to the wall
     	int diff = Math.abs(this.distance - (bandCenter-bandWidth));
     	/*outerWheel = MOTOR_SPEED /*- (constant*diff); 
