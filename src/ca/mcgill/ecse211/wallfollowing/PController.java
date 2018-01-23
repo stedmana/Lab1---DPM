@@ -10,11 +10,11 @@ public class PController implements UltrasonicController {
 
   /* Constants */
   private static final int MOTOR_SPEED = 200;
-  private static final int FILTER_OUT = 22;
+  private static final int FILTER_OUT = 50;
   private static int outerWheel;
   private static int innerWheel;
   private static final int constant = 3;
-  private static final int minDistance = 16;
+  private static final int minDistance = 20;
 
   private final int bandCenter;
   private final int bandWidth;
@@ -22,7 +22,7 @@ public class PController implements UltrasonicController {
   private int filterControl;
 
   public PController(int bandCenter, int bandwidth) {
-    this.bandCenter = bandCenter - 4; //changed band center from 30 to 22, increase was for bangbang controller
+    this.bandCenter = bandCenter; //changed band center from 30 to 22, increase was for bangbang controller
     this.bandWidth = bandwidth;
     this.filterControl = 0;
 
@@ -40,16 +40,16 @@ public class PController implements UltrasonicController {
     // (n.b. this was not included in the Bang-bang controller, but easily
     // could have).
     //
-    if (distance >= 50 && filterControl < FILTER_OUT) {
+    if (distance >= 135 && filterControl < FILTER_OUT) {
       // bad value, do not set the distance var, however do increment the
       // filter value
       filterControl++;
-    } else if (distance >= 50) {
+    } else if (distance >= 135) {
       // We have repeated large values, so there must actually be nothing
       // there: leave the distance alone
       this.distance = distance;
     } else {
-      // distance went below 40: reset filter and leave
+      // distance went below 255: reset filter and leave
       // distance alone.
       filterControl = 0;
       this.distance = distance;
@@ -67,25 +67,33 @@ public class PController implements UltrasonicController {
     	WallFollowingLab.rightMotor.setSpeed(innerWheel/2);
     	WallFollowingLab.leftMotor.setSpeed(outerWheel);*/
     	int diff = Math.abs(distance - (bandCenter - bandWidth));
-    	innerWheel = (2*(MOTOR_SPEED + (constant*diff)) + (constant*diff));
+    	innerWheel = MOTOR_SPEED + 2*(constant*diff);//(2*(MOTOR_SPEED + (constant*diff)) + (constant*diff));
     	outerWheel = MOTOR_SPEED;
     	WallFollowingLab.rightMotor.setSpeed(innerWheel);
-    	WallFollowingLab.leftMotor.setSpeed(outerWheel);
+    	WallFollowingLab.leftMotor.setSpeed(0);
     	WallFollowingLab.rightMotor.forward();
     	WallFollowingLab.leftMotor.forward();
     } else if(this.distance < (bandCenter-bandWidth)) {//robot is still too close to the wall
     	int diff = Math.abs(this.distance - (bandCenter-bandWidth));
     	/*outerWheel = MOTOR_SPEED /*- (constant*diff); 
     	innerWheel = MOTOR_SPEED + (constant*diff);*/
-    	outerWheel = MOTOR_SPEED + 2*(constant*diff); // this causes reversal:: MOTOR_SPEED - 2*(constant*diff);
+    	outerWheel = MOTOR_SPEED + (constant*diff); // this causes reversal: MOTOR_SPEED - 2*(constant*diff);
     	innerWheel = MOTOR_SPEED /*this can work with pivoting - needs to be tweaked: - 2*(constant*diff)*/;
     	WallFollowingLab.leftMotor.setSpeed(outerWheel);
     	WallFollowingLab.rightMotor.setSpeed(innerWheel);
     	WallFollowingLab.leftMotor.forward();
     	WallFollowingLab.rightMotor.forward();
+    } else if(this.distance > (bandCenter+bandWidth) && (this.distance > 50 && this.distance < 135)) {
+    	int diff = Math.abs(distance - (bandCenter + bandWidth));
+    	outerWheel = MOTOR_SPEED + 2*(constant*diff);
+    	innerWheel = MOTOR_SPEED;
+    	WallFollowingLab.leftMotor.setSpeed(outerWheel/2);
+    	WallFollowingLab.rightMotor.setSpeed(0);
+    	WallFollowingLab.rightMotor.forward();
+    	WallFollowingLab.leftMotor.forward();
     } else  { //robot is too far from the wall
     	int diff = Math.abs(this.distance - (bandCenter+bandWidth));
-    	outerWheel = MOTOR_SPEED + 2*(constant*diff);
+    	outerWheel = MOTOR_SPEED + (constant*diff);
     	innerWheel = MOTOR_SPEED; //changed this...
     	WallFollowingLab.leftMotor.setSpeed(outerWheel);
     	WallFollowingLab.rightMotor.setSpeed(innerWheel);
