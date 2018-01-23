@@ -2,7 +2,7 @@ package ca.mcgill.ecse211.wallfollowing;
 
 //import lejos.hardware.motor.EV3LargeRegulatedMotor;
 // The LEFT wheel is the OUTER wheel
-//Can now pivot rather than reverse
+//Can now pivot rather than reverse!
 
 //For some reason, P-controller over-compensates while attempting to take corners - I do not know how to fix it 
 
